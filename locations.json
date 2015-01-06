@@ -1,0 +1,42 @@
+{
+  "shanghai": {
+    "cma_id": "101020100",
+    "aqicn_id": "shanghai/quanshipingjun"
+  },
+  "beijing": {
+    "cma_id": "101010100",
+    "aqicn_id": "beijing/us-embassy"
+  },
+  "guangzhou": {
+    "cma_id": "101280101",
+    "aqicn_id": "guangdong/guangzhou/us-consulate"
+  },
+  "shenzhen": {
+    "cma_id": "101280601",
+    "aqicn_id": "shenzhen"
+  },
+  "chengdu": {
+    "cma_id": "101270101",
+    "aqicn_id": "chengdu/us-consulate"
+  },
+  "tianjin": {
+    "cma_id": "101030100",
+    "aqicn_id": "tianjin"
+  },
+  "nanjing": {
+    "cma_id": "101190101",
+    "aqicn_id": "nanjing"
+  },
+  "wuhan": {
+    "cma_id": "101200101",
+    "aqicn_id": "wuhan"
+  },
+  "chongqing": {
+    "cma_id": "101040100",
+    "aqicn_id": "chongqing"
+  },
+  "xian": {
+    "cma_id": "101110101",
+    "aqicn_id": "xian"
+  }
+}
