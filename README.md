@@ -1,7 +1,8 @@
-# Tiānqì (天气) - Weather & AQI summary for Chinese cities
+# Tiānqì (天气)
 
 This is a little python program I wrote to fetch current weather and air quality
-info from the China Meteorological Administration website, and the AQICN site.
+summaries from the [China Meteorological Administration][CMA] (CMA) website, and the
+[AQICN][] site.
 
 It's designed for use on the command line, and outputs a quick summary for your
 city. It's useful to check quickly in the morning if you need an umbrella or to
@@ -12,21 +13,6 @@ or similar. This data is often not particularly accurate for China's cities, and
 doesn't include air quality readings. So, if you're living in China and want
 a quick weather summary for your terminal, you may find this useful.
 
-## How it works
-
-Sadly, neither the CMA nor AQICN sites offer any APIs so I resorted to using
-BeautifulSoup to simply scrape their pages. Specifically, the data scraped is as
-follows:
-
-* "Headline" Air Quality Index measurement, which is PM2.5
-* AM/PM forecast summary for today
-  - Description, e.g. "Cloudy" or "Light Rain"
-  - Predicted highest temperature
-* The CMA "Umbrella Index", which is handy to check in the morning
-
-I'd welcome any pull requests if you'd like to extend this to include extended
-forecast data.
-
 ## Usage
 
 ```
@@ -34,7 +20,7 @@ $ tianqi shanghai
 High: 19ºC :: Light Rain :: AQI 116 :: Umbrellas ☂
 
 $ tianqi beijing
-High: 6ºC :: Cloudy :: AQI 211 ☹  :: No umbrellas ☂
+High: 6ºC :: Cloudy :: AQI 211 ☹  :: No umbrellas
 
 $ tianqi --help
 Tiānqì (天气) - Weather & AQI summary for Chinese cities
@@ -54,9 +40,22 @@ Options:
     --cma-id=<id>     CMA location id, e.g. 101280800 (Foshan)
 ```
 
+## How it works
+
+Sadly, neither the CMA nor AQICN sites offer any APIs so I resorted to using
+[BeautifulSoup][] to simply scrape their pages. Specifically, the data scraped
+is as follows:
+
+* "Headline" Air Quality Index measurement, which is PM2.5
+* AM/PM forecast summary for current morning or afternoon
+  - Description, e.g. "Cloudy" or "Light Rain"
+  - Predicted highest temperature
+* The CMA "Umbrella Index", which is handy to check in the morning
+
 ## Requirements
 
-* Python ≥ 3.2.2 (older versions have less lenient html.parser)
+* Python ≥ 3.2.2 (older versions only have strict [html.parser][], no good for
+  government websites)
 * [BeautifulSoup][] 4 (`pip install beautifulsoup4`)
 * [docopt][] ≥ 1.6.2 (`pip install docopt`)
 
@@ -80,7 +79,7 @@ lower than AQICN (which averages multiple measuring stations and offers US
 embassy/consulate data). Conversely AQICN has more reliable AQI data, but gets
 its weather data from Yahoo, which isn't as accurate as the CMA.
 
-Also, I just wanted to type one command in the morning and immediately see just
+Also, I just wanted to type one command in the morning and immediately see only
 the data I care about.
 
 ## Alternatives
@@ -100,6 +99,8 @@ take a look at:
 * Add more error handling for timeouts, missing data etc.
 * Use new asyncio bits in 3.3 to run HTTP requests concurrently
 * Split up `scrape_conditions_at()` function, it's a mess
+* Add colour-coding for AQI data, red for >150 maybe?
+* Add verbose output option with more forecast data
 * Add more city shortcuts
 * Package it properly for PyPI?
 
@@ -107,7 +108,10 @@ take a look at:
 
 ISC licensed, go wild. See the bundled [LICENSE][] file for more details.
 
-[BeautifulSoup]: http://www.crummy.com/software/BeautifulSoup/bs4/
+[CMA]: http://www.cma.gov.cn/
+[AQICN]: http://aqicn.org/
+[html.parser]: https://docs.python.org/3/library/html.parser.html
+[BeautifulSoup]: http://www.crummy.com/software/BeautifulSoup/
 [docopt]: https://github.com/docopt/docopt
 [Weatherme]: https://github.com/shapeshed/weatherme
 [ansiweather]: https://github.com/fcambus/ansiweather
