@@ -88,15 +88,22 @@ def scrape_conditions_at(location={}):
     return conditions
 
 def render_conditions(c={}):
+    # AQI conditional rendering
     if int(c['aqi']) > 200:
         c['aqi_icon'] = ' ☹'
     elif int(c['aqi']) < 50:
         c['aqi_icon'] = ' ☺️'
     else:
         c['aqi_icon'] = ''
+    # Umbrella index conditional rendering
+    if c['umbrella'] == 'Umbrellas':
+        c['umbrella_icon'] = ' ☂'
+    else:
+        c['umbrella_icon'] = ''
 
-    print("High: {}ºC :: {} :: AQI {}{} :: {} ☂".format(
-        c['temp_c'], c['weather'], c['aqi'], c['aqi_icon'], c['umbrella']))
+    print("High: {}ºC :: {} :: AQI {}{} :: {}{}".format(
+        c['temp_c'], c['weather'], c['aqi'], c['aqi_icon'],
+        c['umbrella'], c['umbrella_icon']))
 
 def render_locations_list(locations):
     for key in sorted(locations):

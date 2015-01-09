@@ -4,7 +4,7 @@ This is a little python program I wrote to fetch current weather and air quality
 summaries from the [China Meteorological Administration][CMA] (CMA) website, and the
 [AQICN][] site.
 
-It's designed for use on the command line, and outputs a quick summary for your
+It's designed for use on the command line, and outputs a short summary for your
 city. It's useful to check quickly in the morning if you need an umbrella or to
 be aware of air pollution for the day.
 
