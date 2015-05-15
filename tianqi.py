@@ -85,6 +85,11 @@ def scrape_conditions_at(location={}):
         conditions['weather'] = today[3].find("p").string
         conditions['temp_c'] = today[3].find("i", class_="wC").string
         conditions['temp_f'] = today[3].find("i", class_="wF").string
+
+    # Strip all leading & trailing whitespace from the scraped strings
+    for elem in conditions:
+        conditions[elem] = conditions[elem].strip()
+
     return conditions
 
 def render_conditions(c={}):
