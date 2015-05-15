@@ -64,7 +64,7 @@ def scrape_conditions_at(location={}):
     # one - the markup on the CMA pages in particular is horrible,
     # with no ids on key elements, and a real div/class mess.
     conditions = {}
-    conditions['aqi'] = aqicn_page.find("div", class_="aqi").string
+    conditions['aqi'] = aqicn_page.find(id='xatzcaqv').string
     
     umbrella_div = cma_page.find("h2", text="Umbrella Index").parent
     conditions['umbrella'] = umbrella_div.find("i").string
