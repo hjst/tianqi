@@ -97,7 +97,7 @@ def render_conditions(c={}):
     if int(c['aqi']) > 200:
         c['aqi_icon'] = ' ☹'
     elif int(c['aqi']) < 50:
-        c['aqi_icon'] = ' ☺️'
+        c['aqi_icon'] = ' ☺'
     else:
         c['aqi_icon'] = ''
     # Umbrella index conditional rendering
