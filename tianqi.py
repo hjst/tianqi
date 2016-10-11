@@ -19,6 +19,7 @@ Options:
 
 import sys
 import json
+import re
 import urllib.request
 from docopt import docopt
 from bs4 import BeautifulSoup
@@ -26,7 +27,6 @@ from bs4 import BeautifulSoup
 predefined_locations = json.load(open(sys.path[0]+'/locations.json'))
 
 def main(args):
-    #print(args)
     if args['<city>']:
         loc = get_location(args['<city>'], predefined_locations,
                 args['--aqicn-id'], args['--cma-id'])
@@ -45,7 +45,7 @@ def scrape_conditions_at(location={}):
     cma_url = 'http://en.weather.com.cn/weather/%s.shtml'\
         '?index=3' % location['cma_id']
     cma_response = urllib.request.urlopen(cma_url)
-    cma_page = BeautifulSoup(cma_response.read())
+    cma_page = BeautifulSoup(cma_response.read(), "lxml")
 
     # AQICN HTTP request
     aqicn_url = 'http://aqicn.org/city/%s/m' % location['aqicn_id']
@@ -56,17 +56,31 @@ def scrape_conditions_at(location={}):
         'CPU OS 8_0 like Mac OS X) AppleWebKit/538.34.9 '\
         '(KHTML, like Gecko) Mobile/12A4265u')
     aqicn_response = urllib.request.urlopen(aqicn_request)
-    aqicn_page = BeautifulSoup(aqicn_response.read())
+    aqicn_page = BeautifulSoup(aqicn_response.read(), "lxml")
 
     # Populate the conditions dict by scraping the pages
+    conditions = {}
+
+    # The AQI pages are populated by a javascript function, so we need
+    # to scrape & parse the JSON from the <script> tags on the page
+    script_tag = aqicn_page.find(name='script', string=re.compile("var model"))
+    # found the <script> tag which contains the model data
+    # split the string on the ';' char to get JS expressions
+    js_exps = script_tag.string.split(';')
+    # iterate over the array of expressions and find the one
+    # that contains the 'var model' string
+    for exp in js_exps:
+        if 'var model' in exp:
+            # grab the text from the first { to the end
+            aqi_data = json.loads(exp[exp.find('{'):])
+            # the 'iaqi' first member has the 'v' data
+            conditions['aqi'] = aqi_data['iaqi'][0]['v'][0]
+
     # Note here that I'm using .find() instead of .find_all because
     # in each case the result I want is very specifically the first
     # one - the markup on the CMA pages in particular is horrible,
     # with no ids on key elements, and a real div/class mess.
-    conditions = {}
-    conditions['aqi'] = aqicn_page.find(id='xatzcaqv').string
-    
-    umbrella_div = cma_page.find("h2", text="Umbrella Index").parent
+    umbrella_div = cma_page.find("h2", string="Umbrella Index").parent
     conditions['umbrella'] = umbrella_div.find("i").string
     forecast = cma_page.find("div", class_="day7")
     today = forecast.find_all("div", class_="fl")
@@ -88,7 +102,10 @@ def scrape_conditions_at(location={}):
 
     # Strip all leading & trailing whitespace from the scraped strings
     for elem in conditions:
-        conditions[elem] = conditions[elem].strip()
+        try:
+            conditions[elem] = conditions[elem].strip()
+        except AttributeError:
+            pass # ignore strip() method not existing, probably an int
 
     return conditions
 
